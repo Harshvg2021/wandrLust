@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Login / Signup </title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css'>
+    <link rel="stylesheet" href="/PageCss/login.css" />
+  </head>
+  <body>
+    <div class="ocean">
+      <div class="wave"></div>
+      <div class="wave"></div>
+  </div>
+  <!-- Log In Form Section -->
+  <section>
+      <div class="container" id="container">
+          <div class="form-container sign-up-container">
+            <form id="signUpForm" class="sign-up-form">
+                  <h1>Sign Up</h1>
+
+                  <input type="text" id="name" name="name" placeholder="Name" required />
+                 
+                  <input type="email" id="email" name="email" placeholder="Email" onchange={validateHandleEmail()} />
+                  
+                  <input type="number" id="phonenumber" name="phonenumber" placeholder="Phone Number" required
+                  onchange={handlePhoneNumberValidation()} />
+
+                  <input type="text" id="username2" name="username" placeholder="Username" required
+                  onchange={validateHandleUsername2()} />
+
+                  <input type="password" id="password2" name="password" placeholder="Password" required
+                  minlength="8" />
+
+                  <input type="number" id="age" name="age" placeholder="Age" required />
+
+                  <input type="text" id="gender" name="gender" placeholder="Gender" />
+
+
+                 <input type="submit" id="Signup" class="btn" style="background-color: #f94566; border: 2px solid black;" />
+              </form>
+          </div>
+          <div class="form-container sign-in-container">
+              <form  id="signInForm" class="sign-in-form">
+                  <h1>Sign in</h1>
+                  <label>
+                    <input type="text" id="username1" name="username" placeholder="Username"
+                    onchange={validateHandleUsername1()} required />
+                  </label>
+                  <label>
+                    <input type="password" id="password1" name="password" placeholder="Password" minlength="8"
+                    required />
+                  </label>
+                  <input type="submit" value="Login" class="btn solid" style="background-color: #f94566; border: 2px solid black;" />
+              </form>
+          </div>
+          <div class="overlay-container">
+              <div class="overlay">
+                  <div class="overlay-panel overlay-left">
+                      <h1>Log in</h1>
+                      <p>Sign in here if you already have an account </p>
+                      <button class="ghost mt-5" id="signIn">Sign In</button>
+                  </div>
+                  <div class="overlay-panel overlay-right">
+                      <h1>Create, Account!</h1>
+                      <p>Sign up if you still don't have an account ... </p>
+                      <button class="ghost" id="signUp">Sign Up</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js'></script>
+    <script >
+
+const signUpButton = document.getElementById('signUp');
+const signInButton = document.getElementById('signIn');
+const cont = document.getElementById('container');
+
+signUpButton.addEventListener('click', () =>
+    cont.classList.add('right-panel-active'));
+
+signInButton.addEventListener('click', () =>
+    cont.classList.remove('right-panel-active'));
+        
+         let regexEmail = /^[A-Za-z0-9._]+@[A-Za-z]+[.][A-Za-z]+$/
+        let regexUsername = /^[A-Za-z][A-Za-z0-9_]{7,29}$/
+        let regexPhonenumber = /^[6-9]\d{9}$/
+
+        document.getElementById("signInForm").onsubmit = function (e) {
+            e.preventDefault()
+
+            const xhr = new XMLHttpRequest();
+
+            // Response came back
+            xhr.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    window.location.href = "http://localhost:6969/";
+                }
+                if (this.readyState === 4 && this.status >= 400) {
+                    const responseText = JSON.parse(this.responseText)
+                    alert(responseText.message);
+                }
+            }
+
+            // true means async request
+            xhr.open("POST", "http://localhost:6969/signin", true);
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhr.send(`username=${document.getElementById("username1").value}&password=${document.getElementById("password1").value}`);
+        }
+
+        document.getElementById("signUpForm").onsubmit = function (e) {
+            e.preventDefault()
+            console.log("Working?");
+            const xhr = new XMLHttpRequest();
+
+            // Response came back
+            xhr.onreadystatechange = function () {
+                console.log("Response??");
+                console.log(this.readyState);
+                if (this.readyState === 4 && this.status === 200) {
+                    window.location.href = "http://localhost:6969/";
+                }
+                if (this.readyState === 4 && this.status >= 400) {
+                    console.log("Error?");
+                    const responseText = JSON.parse(this.responseText)
+                    alert(responseText.message);
+                }
+            }
+
+            // true means async request
+            xhr.open("POST", "http://localhost:6969/signup", true);
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhr.send(`name=${document.getElementById("name").value}&email=${document.getElementById("email").value}&phone=${document.getElementById("phonenumber").value}&username=${document.getElementById("username2").value}&password=${document.getElementById("password2").value}&age=${document.getElementById("age").value}&gender=${document.getElementById("gender").value}`);
+        }
+
+        const validateHandleUsername2 = () => {
+            let username = document.getElementById("username2")
+            if (!username.value.match(regexUsername)) {
+                alert("Please enter valid Username")
+                username.value = "";
+            }
+        }
+
+        const validateHandleUsername1 = () => {
+            let username = document.getElementById("username1")
+            if (!username.value.match(regexUsername)) {
+                alert("Please enter valid Username")
+                username.value = "";
+            }
+        }
+
+        const validateHandleEmail = () => {
+            let email = document.getElementById("email")
+            console.log(email);
+            if (!email.value.match(regexEmail)) {
+                alert("Please enter valid Email")
+                email.value = "";
+            }
+        }
+
+        const handlePhoneNumberValidation = () => {
+            let phonenumber = document.getElementById("phonenumber")
+            if (!phonenumber.value.match(regexPhonenumber)) {
+                alert("Please enter valid Phone Number")
+                phonenumber.value = "";
+            }
+        }
+
+        const sign_in_btn = document.querySelector("#sign-in-btn");
+        const sign_up_btn = document.querySelector("#sign-up-btn");
+        const container = document.querySelector(".container");
+
+        sign_up_btn.addEventListener("click", () => {
+            container.classList.add("sign-up-mode");
+        });
+
+        sign_in_btn.addEventListener("click", () => {
+            container.classList.remove("sign-up-mode");
+        });
+    </script>
+  </body>
+</html>
