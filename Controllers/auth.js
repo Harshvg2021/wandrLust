@@ -35,7 +35,7 @@ const login = async (req, res, next) => {
       username: req.body.username,
     });
     if (!user) {
-      // return next(createError(404, "User not found!"));
+      return next(createError(404, "User not found!"));
       return res
         .status(404)
         .json({message: "User not found!"})
